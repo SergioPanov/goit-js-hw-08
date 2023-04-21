@@ -14,36 +14,35 @@ let dataObj = {
   message: actualObj.message || '',
 };
 
-// populate();
-
 // Input
 
 function onInputFill(e) {
-  if (e.target.name === 'email') {
-    dataObj[e.target.name] = e.target.value;
-  } else if (e.target.name === 'message') {
-    dataObj[e.target.name] = e.target.value;
-  }
+  dataObj[e.target.name] = e.target.value;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(dataObj));
+
+  if (emailInputRef.value !== '' && messageTextRef.value !== '') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataObj));
+  }
 }
+
 // Submit
-const onClickSubmit = e => {
+const onFormSubmit = e => {
   e.preventDefault();
 
   if (
     emailInputRef.value === '' ||
-    messageTextRef.value === ' ' ||
+    messageTextRef.value === '' ||
     messageTextRef.value === ''
   ) {
     alert('Fill all the gaps!');
   } else {
-    const localData = localStorage.getItem(STORAGE_KEY);
+    const localData = JSON.parse(localStorage.getItem(STORAGE_KEY));
     console.log(localData);
     formRef.reset();
-    window.localStorage.clear();
+    window.localStorage.removeItem(STORAGE_KEY);
     dataObj = {};
   }
 };
 
 formRef.addEventListener('input', throttle(onInputFill, 500));
-btnRef.addEventListener('click', onClickSubmit);
+formRef.addEventListener('submit', onFormSubmit);

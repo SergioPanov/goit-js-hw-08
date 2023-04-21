@@ -7,24 +7,8 @@ const TIME_STORAGE_KEY = 'videoplayer-current-time';
 
 iframePlayer.on('timeupdate', throttle(timeSet, 1000));
 
-function timeSet(data) {
-  const timeValue = data.seconds;
-  localStorage.setItem(TIME_STORAGE_KEY, timeValue);
+function timeSet({ seconds }) {
+  localStorage.setItem(TIME_STORAGE_KEY, seconds);
 }
 
-iframePlayer
-  .setCurrentTime(localStorage.getItem(TIME_STORAGE_KEY))
-  .then(function (seconds) {
-    // seconds = the actual time that the player seeked to
-  })
-  .catch(function (error) {
-    switch (error.name) {
-      case 'RangeError':
-        // the time was less than 0 or greater than the video’s duration
-        break;
-
-      default:
-        // some other error occurred
-        break;
-    }
-  });
+iframePlayer.setCurrentTime(localStorage.getItem(TIME_STORAGE_KEY) || 0);
